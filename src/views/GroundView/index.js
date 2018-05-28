@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
-  View
+  View,
+  StyleSheet
 } from 'react-native'
 
 // Redux
@@ -11,23 +12,24 @@ import HoleMole from '@Components/HoleMole'
 
 class GroundView extends Component {
   render () {
+    // Can be modified to accomodate variable screen height
     return (
       <View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={styles.row}>
           <HoleMole {...this.props} />
           <HoleMole {...this.props} />
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={styles.row}>
           <HoleMole {...this.props} />
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={styles.row}>
           <HoleMole {...this.props} />
           <HoleMole {...this.props} />
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={styles.row}>
           <HoleMole {...this.props} />
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <View style={styles.row}>
           <HoleMole {...this.props} />
           <HoleMole {...this.props} />
         </View>
@@ -50,3 +52,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroundView)
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  }
+})

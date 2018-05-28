@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   View,
   Image,
+  StyleSheet,
   Dimensions
 } from 'react-native'
 
@@ -20,9 +21,9 @@ class ScoreView extends Component {
   render () {
     const width = Dimensions.get('screen').width
     const height = width / 2.08
-    return <View style={{height}}>
-      <Image source={screen} style={{height, width, position: 'absolute'}} />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', top: 26, marginHorizontal: 8}}>
+    return <View style={[styles.container, {height}]}>
+      <Image source={screen} style={[styles.bgImage, {height, width}]} />
+      <View style={styles.infoContainer}>
         <GameButton text={this.props.score} />
         <GameButton text={this.props.time} />
       </View>
@@ -40,3 +41,17 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScoreView)
+
+const styles = StyleSheet.create({
+  container: {
+  },
+  bgImage: {
+    position: 'absolute'
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    top: 26,
+    marginHorizontal: 8
+  }
+})

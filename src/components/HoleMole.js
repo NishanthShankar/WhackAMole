@@ -3,6 +3,7 @@ import {
   View,
   Animated,
   Image,
+  StyleSheet,
   TouchableOpacity
 } from 'react-native'
 
@@ -29,11 +30,15 @@ export default class HoleMole extends Component {
 
   start = () => {
     if (this.props.time < WAIT_SECONDS) return
-    setTimeout(this.showMole, Math.random() * WAIT_SECONDS * 1000)
+
+    setTimeout(
+      this.showMole,
+      Math.random() * WAIT_SECONDS * 1000 + this.props.duration
+    )
   }
 
   showMole = () => {
-    const {maxVisible, visibleTime, animationDuration: duration} = this.props
+    const { maxVisible, visibleTime, animationDuration: duration } = this.props
 
     // Check for maximum visible mole and call start again if exceeds
     if (this.props.currentVisible >= maxVisible) return this.start()
@@ -44,16 +49,18 @@ export default class HoleMole extends Component {
 
     // On animated end is not completely reliable. Use time out instead
     setTimeout(_ => setTimeout(this.hideMole(false), visibleTime), duration)
-    Animated
-      .timing(this.state.top, {toValue: MOLE_VISIBLE_OFFSET, duration})
-      .start()
+    Animated.timing(this.state.top, {
+      toValue: MOLE_VISIBLE_OFFSET,
+      duration
+    }).start()
   }
 
-  hideMole = (hit) => () => {
+  hideMole = hit => () => {
     if (!this.show) {
       // unclean close
-      return Animated.timing(this.state.top, {toValue: MOLE_HIDDEN_OFFSET})
-              .start(this.cleanup(false, hit))
+      return Animated.timing(this.state.top, {
+        toValue: MOLE_HIDDEN_OFFSET
+      }).start(this.cleanup(false, hit))
     }
 
     if (hit) {
@@ -61,8 +68,9 @@ export default class HoleMole extends Component {
       this.props.onHit()
     }
 
-    Animated.timing(this.state.top, {toValue: MOLE_HIDDEN_OFFSET})
-    .start(this.cleanup(true, hit))
+    Animated.timing(this.state.top, { toValue: MOLE_HIDDEN_OFFSET }).start(
+      this.cleanup(true, hit)
+    )
   }
 
   cleanup = (clean, hit) => () => {
@@ -77,12 +85,50 @@ export default class HoleMole extends Component {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={this.hideMole(true)}
-        style={{width: 140, height: 100}}>
-        <Image source={hole} resizeMode='contain' style={{position: 'absolute', left: 6, width: 140, height: 100}} />
-        <Animated.Image source={mole} resizeMode='contain' style={{position: 'absolute', left: -4, top: this.state.top, width: 160, height: 200}} />
-        <Image source={holeMask} resizeMode='contain' style={{position: 'absolute', top: 26, width: 152, height: 100}} />
-        <View style={{position: 'absolute', top: 90, width: 144, height: 180, backgroundColor: '#c9bf9c'}} />
+        style={styles.container}
+      >
+        <Image source={hole} resizeMode='contain' style={styles.hole} />
+        <Animated.Image
+          source={mole}
+          resizeMode='contain'
+          style={styles.hideMole}
+        />
+        <Image source={holeMask} resizeMode='contain' style={styles.mask} />
+        <View style={styles.additional_mask} />
       </TouchableOpacity>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: 140,
+    height: 100
+  },
+  hole: {
+    position: 'absolute',
+    left: 6,
+    width: 140,
+    height: 100
+  },
+  hideMole: {
+    position: 'absolute',
+    left: -4,
+    top: this.state.top,
+    width: 160,
+    height: 200
+  },
+  mask: {
+    position: 'absolute',
+    top: 26,
+    width: 152,
+    height: 100
+  },
+  additional_mask: {
+    position: 'absolute',
+    top: 90,
+    width: 144,
+    height: 180,
+    backgroundColor: '#c9bf9c'
+  }
+})
